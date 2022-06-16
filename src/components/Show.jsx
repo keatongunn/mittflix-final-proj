@@ -1,8 +1,13 @@
-const Show = ( { show } ) => {
-  const {title, overview, vote_average, poster_path} = show;
+const Show = ( { show, toggleWatchList, onWatch } ) => {
+  const {title, overview, vote_average, poster_path, id} = show;
+
+  const handleClick = (event) => {
+    toggleWatchList(id);
+    console.log(id);
+  }
   return (
     <div className="movie">
-      <a href="/details/60735"
+      <a href="/details/60735" key={id}
         ><img src={
           `https://image.tmdb.org/t/p/w500/${poster_path}`
           } 
@@ -14,8 +19,8 @@ const Show = ( { show } ) => {
           {overview}
           </div>
         </div></a>
-      <div data-toggled="false" className="listToggle">
-        <div><i className="fa fa-fw fa-plus"></i><i className="fa fa-fw fa-check"></i></div>
+      <div data-toggled={onWatch} className="listToggle">
+        <div onClick={handleClick}><i className="fa fa-fw fa-plus"></i><i className="fa fa-fw fa-check"></i></div>
       </div>
     </div>
   );

@@ -10,10 +10,7 @@ const Header = (props) => {
           </ul>
         </nav>
       </div>
-      <form id="search" className="search">
-        <input type="search" placeholder="Search for a title..." value="" />
-        <div className="searchResults"></div>
-      </form>
+      {props.children}
     </header>
   );
 }

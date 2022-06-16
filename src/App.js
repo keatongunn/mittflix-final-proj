@@ -3,9 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 import Header from "./components/Header";
 import ProviderSection from "./components/ProviderSection";
-import indexMovies from "./services/movie-API";
+import IndexShows from "./services/movie-API";
 import searchShows from "./services/search-API";
 import Form from "./components/Form";
+import SearchResults from "./components/SearchResults";
+import ShowDetailsSearch from "./services/details-API"; 
+import Details from "./components/Details";
+import Show from "./components/Show";
 
 function App() {
 
@@ -13,32 +17,47 @@ function App() {
   const [craveShows, setCraveShows] = useState([]);
   const [disneyShows, setDisneyShows] = useState([]);
   const [appleShows, setAppleShows] = useState([]);
+  const [watchShows, setWatchShows] = useState([]);
+
+  const[showDetails, setShowDetails] = useState([]);
   
   const [searchedShows, setSearchedShows] = useState([]);
 
   useEffect(() => {
-    indexMovies("8").then((netflixShows) => setNetShows(netflixShows));
+    ShowDetailsSearch(50).then((showDetails) => setShowDetails(showDetails));
   }, []);
 
   useEffect(() => {
-    indexMovies("230").then((craveShows) => setCraveShows(craveShows));
+    IndexShows("8").then((netflixShows) => setNetShows(netflixShows));
   }, []);
 
   useEffect(() => {
-    indexMovies("337").then((disneyShows) => setDisneyShows(disneyShows));
+    IndexShows("230").then((craveShows) => setCraveShows(craveShows));
   }, []);
 
   useEffect(() => {
-    indexMovies("350").then((appleShows) => setAppleShows(appleShows));
+    IndexShows("337").then((disneyShows) => setDisneyShows(disneyShows));
   }, []);
 
-  useEffect((query) => {
-    searchShows(query).then((searchedShows) => setSearchedShows(searchedShows));
+  useEffect(() => {
+    IndexShows("350").then((appleShows) => setAppleShows(appleShows));
   }, []);
+
 
   const handleSearch = (query) => {
     searchShows(query).then((searchedShows) => setSearchedShows(searchedShows));
   };
+
+  const handleToggleWatchList = (id) => {
+    setWatchShows((prevState) => {
+      if(prevState.findIndex((showId) => showId === id) === -1) {
+        return [...prevState, id];
+        
+      }
+      localStorage.setItem('shows', JSON.stringify(watchShows));
+      return prevState.filter((showId) => showId !== id);
+    })
+  }
 
   return (
     <div className="App">
@@ -48,14 +67,21 @@ function App() {
             <Form searchShows={handleSearch} />
           </Header>
             <Routes>
+              
               <Route path="/" element={
                 <>
-                <ProviderSection company={"Netflix"} shows={netflixShows}/> 
-                <ProviderSection company={"Crave"} shows={craveShows}/>
-                <ProviderSection company={"Disney"} shows={disneyShows}/>
-                <ProviderSection company={"Apple Plus"} shows={appleShows}/> 
+                <ProviderSection company={"Netflix"} shows={netflixShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/> 
+                <ProviderSection company={"Crave"} shows={craveShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/>
+                <ProviderSection company={"Disney"} shows={disneyShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/>
+                <ProviderSection company={"Apple Plus"} shows={appleShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/> 
                 </>
               }/>
+              <Route path="/search" element={
+                <SearchResults company={"Results"} 
+                shows={searchedShows} />
+              } />
+              <Route path="/details" element= {
+                <Details  /> } /> 
             </Routes>
         </div>
       </Router>
