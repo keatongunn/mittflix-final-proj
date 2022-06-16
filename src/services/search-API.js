@@ -6,6 +6,7 @@ const searchShows = async (query) => {
   const request = await fetch(`${searchUrl}&query=${query}`);
   const response = await request.json();
   const shows = await response.results;
+  console.log(shows)
   return shows;
 }
 

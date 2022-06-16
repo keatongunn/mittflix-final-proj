@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 import Header from "./components/Header";
 import ProviderSection from "./components/ProviderSection";
-import IndexShows from "./services/movie-API";
+import IndexShows from "./services/shows-API";
 import searchShows from "./services/search-API";
 import Form from "./components/Form";
 import SearchResults from "./components/SearchResults";
@@ -13,15 +13,20 @@ import Show from "./components/Show";
 
 function App() {
 
+  const watchMovieList = JSON.parse(localStorage.getItem('watchMovies'));
   const [netflixShows, setNetShows] = useState([]);
   const [craveShows, setCraveShows] = useState([]);
   const [disneyShows, setDisneyShows] = useState([]);
   const [appleShows, setAppleShows] = useState([]);
-  const [watchShows, setWatchShows] = useState([]);
+  const [watchShows, setWatchShows] = useState(watchMovieList || []);
 
   const[showDetails, setShowDetails] = useState([]);
   
   const [searchedShows, setSearchedShows] = useState([]);
+
+  useEffect(() => {
+    localStorage.setItem('watchShows', JSON.stringify(watchShows));
+  }, [watchShows]);
 
   useEffect(() => {
     ShowDetailsSearch(50).then((showDetails) => setShowDetails(showDetails));
@@ -31,6 +36,8 @@ function App() {
     IndexShows("8").then((netflixShows) => setNetShows(netflixShows));
   }, []);
 
+  console.log(showDetails);
+  console.log(netflixShows);
   useEffect(() => {
     IndexShows("230").then((craveShows) => setCraveShows(craveShows));
   }, []);
@@ -52,12 +59,15 @@ function App() {
     setWatchShows((prevState) => {
       if(prevState.findIndex((showId) => showId === id) === -1) {
         return [...prevState, id];
-        
       }
-      localStorage.setItem('shows', JSON.stringify(watchShows));
       return prevState.filter((showId) => showId !== id);
     })
-  }
+    console.log(watchShows);
+  };
+
+  
+
+  
 
   return (
     <div className="App">
@@ -78,10 +88,12 @@ function App() {
               }/>
               <Route path="/search" element={
                 <SearchResults company={"Results"} 
-                shows={searchedShows} />
+                shows={searchedShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/>
               } />
               <Route path="/details" element= {
-                <Details  /> } /> 
+                <Details  show={showDetails}
+                   />
+              } />      
             </Routes>
         </div>
       </Router>

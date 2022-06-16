@@ -1,9 +1,9 @@
 import ProviderSection from "./ProviderSection";
 
-const SearchResults = ( {company, shows} ) => {
+const SearchResults = ( {company, shows, toggleWatchList, onWatchList} ) => {
   return ( 
     <>
-      <ProviderSection company={company} shows={shows}/>
+      <ProviderSection company={company} shows={shows} toggleWatchList={toggleWatchList} onWatchList={onWatchList}/>
     </> 
   );
 }
