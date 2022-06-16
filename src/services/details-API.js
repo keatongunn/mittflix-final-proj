@@ -5,7 +5,6 @@ const detailsURL = `https://api.themoviedb.org/3/tv`
 const ShowDetailsSearch = async (showId) => {
   const request = await fetch(`${detailsURL}/${showId}?api_key=${apiKey}`);
   const response = await request.json();
-
   return response;
 };
 

@@ -9,7 +9,6 @@ import Form from "./components/Form";
 import SearchResults from "./components/SearchResults";
 import ShowDetailsSearch from "./services/details-API"; 
 import Details from "./components/Details";
-import Show from "./components/Show";
 
 function App() {
 
@@ -29,15 +28,9 @@ function App() {
   }, [watchShows]);
 
   useEffect(() => {
-    ShowDetailsSearch(50).then((showDetails) => setShowDetails(showDetails));
-  }, []);
-
-  useEffect(() => {
     IndexShows("8").then((netflixShows) => setNetShows(netflixShows));
   }, []);
 
-  console.log(showDetails);
-  console.log(netflixShows);
   useEffect(() => {
     IndexShows("230").then((craveShows) => setCraveShows(craveShows));
   }, []);
@@ -50,6 +43,10 @@ function App() {
     IndexShows("350").then((appleShows) => setAppleShows(appleShows));
   }, []);
 
+  const handleDetails = (id) => {
+    ShowDetailsSearch(id).then((showDetails) => setShowDetails(showDetails));
+    console.log(showDetails)   
+  };
 
   const handleSearch = (query) => {
     searchShows(query).then((searchedShows) => setSearchedShows(searchedShows));
@@ -62,7 +59,6 @@ function App() {
       }
       return prevState.filter((showId) => showId !== id);
     })
-    console.log(watchShows);
   };
 
   
@@ -80,15 +76,15 @@ function App() {
               
               <Route path="/" element={
                 <>
-                <ProviderSection company={"Netflix"} shows={netflixShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/> 
-                <ProviderSection company={"Crave"} shows={craveShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/>
-                <ProviderSection company={"Disney"} shows={disneyShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/>
-                <ProviderSection company={"Apple Plus"} shows={appleShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/> 
+                <ProviderSection company={"Netflix"} shows={netflixShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows} handleDetails={handleDetails}/> 
+                <ProviderSection company={"Crave"} shows={craveShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows} handleDetails={handleDetails}/>
+                <ProviderSection company={"Disney"} shows={disneyShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows} handleDetails={handleDetails}/>
+                <ProviderSection company={"Apple Plus"} shows={appleShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows} handleDetails={handleDetails}/> 
                 </>
               }/>
               <Route path="/search" element={
                 <SearchResults company={"Results"} 
-                shows={searchedShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows}/>
+                shows={searchedShows} toggleWatchList={handleToggleWatchList} onWatchList={watchShows} handleDetails={handleDetails}/>
               } />
               <Route path="/details" element= {
                 <Details  show={showDetails}

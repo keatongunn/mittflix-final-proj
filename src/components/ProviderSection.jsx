@@ -1,6 +1,6 @@
 import Show from "./Show";
 
-const ProviderSection = ({company, shows, toggleWatchList, onWatchList}) => {
+const ProviderSection = ({company, shows, toggleWatchList, onWatchList, handleDetails}) => {
   return (
     <div className="titleList">
         <div className="title">
@@ -8,6 +8,7 @@ const ProviderSection = ({company, shows, toggleWatchList, onWatchList}) => {
           <div className="titles-wrapper">
             {shows.map((show) => (
             <Show 
+              handleDetails={handleDetails}
               key={show.id} 
               show={show} 
               toggleWatchList={toggleWatchList}

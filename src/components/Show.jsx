@@ -1,14 +1,18 @@
 import placeholder from "../images/image-not-available.jpg";
 
-const Show = ( { show, toggleWatchList, onWatch } ) => {
+const Show = ( { show, toggleWatchList, onWatch, handleDetails } ) => {
   const {name, overview, vote_average, poster_path, id} = show;
+
+  const sendToDetails = () => {
+    handleDetails(show.id);
+  }
 
   const handleClick = (event) => {
     toggleWatchList(id);
   }
   return (
-    <div className="movie">
-      <a href="/details" key={id}
+    <div className="movie" onClick={sendToDetails} key={id}>
+      <a  key={id}
         ><img 
           src={
             poster_path === null
